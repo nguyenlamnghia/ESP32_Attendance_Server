@@ -2,6 +2,8 @@ const Student = require("../models/student");
 const Account = require("../models/account");
 const Lecturer = require("../models/lecturer");
 const Course = require("../models/course");
+const Class = require("../models/class");
+const Enrollment = require("../models/enrollment");
 
 // import format date
 const { format, parseISO } = require("date-fns");
@@ -408,3 +410,62 @@ exports.deleteCourse = (req, res, next) => {
   res.redirect("/admin/courses");
 };
 // ------------- END ----------------
+
+// ------------- CLASSES CONTROLLER -------------
+exports.getClasses = async (req, res, next) => {
+  const courses = await Course.getAllCourses();
+  const classes = await Class.getAllClasses();
+  const lecturers = await Lecturer.getAllLecturers();
+  res.render("admin/classes", {
+    isLogged: req.session.user ? true : false,
+    account: req.session.user,
+    
+    courses: courses,
+    classes: classes,
+    lecturers: lecturers,
+    
+    pageTitle: "Classes",
+    path: "/admin/classes",
+  });
+};
+
+
+exports.getClass = async (req, res, next) => {
+  try {
+    const class_id = req.params.class_id;
+    // let student = await Student.getStudentById(student_id);
+    // // format date of birth
+    // student.dob = format(student.dob, "yyyy-MM-dd");
+
+    // const student_account = await Account.getAccountById(student_id);
+    const enrollments = await Enrollment.getEnrollmentByClassId(class_id);
+    const class_info = await Class.getClassById(class_id);
+    const course = await Course.getCourseById(class_info.course_id);
+    const students = [];
+    for (const enrollment of enrollments) {
+      const student = await Student.getStudentById(enrollment.student_id);
+      students.push(student);
+    }
+    // format date of birth
+    for (const student of students) {
+      student.dob = format(student.dob, "yyyy-MM-dd");
+    }
+    res.render("admin/class-detail", {
+      isLogged: req.session.user ? true : false,
+      account: req.session.user,
+
+      students: students,
+      course: course,
+      
+      pageTitle: "Student Detail",
+      path: "/admin/classes/" + class_id,
+  });
+  console.log(enrollments);
+  console.log(students);
+  console.log(class_info);
+  console.log(course);
+  } catch (err) {
+    console.log(err);
+    res.redirect("/admin");
+  }
+};

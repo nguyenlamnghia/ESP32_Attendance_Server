@@ -133,4 +133,17 @@ router.get(
 );
 // ------------ END --------------
 
+
+// ------------- COURSE CONTROLLER -------------
+// /admin/classes => GET
+// router.get("/classes", checkRole("admin"), adminController.getClasses);
+router.get("/classes", adminController.getClasses);
+// ------------ END --------------
 module.exports = router;
+
+// /admin/classes/:class_id => GET
+router.get(
+  "/classes/:class_id",
+  checkRole("admin"),
+  adminController.getClass
+);

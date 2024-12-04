@@ -26,17 +26,15 @@
             </a>
           </li>
           <li>
-            <a href="/admin/courses" class="nav-link link-dark">
-              Manage Course
-            </a>
+            <a href="/admin/courses" class="nav-link link-dark"> Manage Course </a>
           </li>
           <li>
-            <a href="/admin/lecturers" class="nav-link active">
+            <a href="/admin/lecturers" class="nav-link link-dark">
               Manage Lecturer
             </a>
           </li>
           <li>
-            <a href="/admin/classes" class="nav-link link-dark">
+            <a href="/admin/classes" class="nav-link active">
               Manage Classes
             </a>
           </li>
@@ -80,9 +78,9 @@
           <button
             type="button"
             class="btn btn-light"
-            onclick="window.location.href='/admin/add-lecturer'"
+            onclick="window.location.href='/admin/add-course'"
           >
-            Add Lecturer
+            Add Course
           </button>
           <button
             type="button"
@@ -106,35 +104,30 @@
           <thead>
             <tr>
               <th scope="col">STT</th>
-              <th scope="col">First Name</th>
-              <th scope="col">Last Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Phone</th>
-              <th scope="col">Date Of Birth</th>
+              <th scope="col">Class</th>
+              <th scope="col">Lecturer</th>
+              <th scope="col">Number</th>
               <th scope="col"></th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody id="mytable">
-            <% let stt = 1; lecturers.forEach(lecturers=> { %>
+            <% let stt = 1; classes.forEach(classes=> { %>
             <tr>
               <td><%= stt++ %></td>
-              <td><%= lecturers.first_name %></td>
-              <td><%= lecturers.last_name %></td>
-              <td><%= lecturers.email %></td>
-              <td><%= lecturers.phone %></td>
-              <td><%= lecturers.dob %></td>
-              <td><%= lecturers.result %></td>
+              <td><%= courses.find(c => c.course_id === classes.class_id).title %></td>
+              <td><%= lecturers.find(c => c.lecturer_id === classes.lecturer_id).last_name %></td>
+              <td><%= classes.number_student %></td>
               <td>
                 <a
-                  href="/admin/lecturers/<%= lecturers.lecturer_id %>"
+                  href="/admin/classes/<%= classes.class_id %>"
                   class="btn btn-link"
                   >Edit</a
                 >
               </td>
               <td>
                 <a
-                  href="/admin/lecturers/delete/<%= lecturers.lecturer_id %>"
+                  href="/admin/courses/delete/<%= courses.course_id %>"
                   class="btn btn-link"
                   >Delete</a
                 >

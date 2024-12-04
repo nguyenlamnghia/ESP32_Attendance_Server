@@ -31,12 +31,12 @@
             </a>
           </li>
           <li>
-            <a href="/admin/lecturers" class="nav-link active">
+            <a href="/admin/lecturers" class="nav-link link-dark">
               Manage Lecturer
             </a>
           </li>
           <li>
-            <a href="/admin/classes" class="nav-link link-dark">
+            <a href="/admin/classes" class="nav-link active">
               Manage Classes
             </a>
           </li>
@@ -76,27 +76,31 @@
 
       <!------------------------------------ main content ----------------------------------------------------->
       <div class="adminContent">
+        <div class="my-2">
+          <h3><%= course.title %></h3>
+          <hr>
+        </div>
         <div>
           <button
             type="button"
             class="btn btn-light"
-            onclick="window.location.href='/admin/add-lecturer'"
+            onclick="window.location.href='/admin/add-student'"
           >
-            Add Lecturer
+            Add Student
           </button>
           <button
             type="button"
             class="btn btn-light"
             onclick="window.location.href='/admin/createStudent'"
           >
-            Add Lecturer
+            Add Student
           </button>
           <button
             type="button"
             class="btn btn-light"
             onclick="window.location.href='/admin/createStudent'"
           >
-            Add Lecturer
+            Add Student
           </button>
         </div>
 
@@ -116,25 +120,25 @@
             </tr>
           </thead>
           <tbody id="mytable">
-            <% let stt = 1; lecturers.forEach(lecturers=> { %>
+            <% let stt = 1; students.forEach(student=> { %>
             <tr>
               <td><%= stt++ %></td>
-              <td><%= lecturers.first_name %></td>
-              <td><%= lecturers.last_name %></td>
-              <td><%= lecturers.email %></td>
-              <td><%= lecturers.phone %></td>
-              <td><%= lecturers.dob %></td>
-              <td><%= lecturers.result %></td>
+              <td><%= student.first_name %></td>
+              <td><%= student.last_name %></td>
+              <td><%= student.email %></td>
+              <td><%= student.phone %></td>
+              <td><%= student.dob %></td>
+              <td><%= student.result %></td>
               <td>
                 <a
-                  href="/admin/lecturers/<%= lecturers.lecturer_id %>"
+                  href="/admin/students/<%= student.student_id %>"
                   class="btn btn-link"
                   >Edit</a
                 >
               </td>
               <td>
                 <a
-                  href="/admin/lecturers/delete/<%= lecturers.lecturer_id %>"
+                  href="/admin/students/delete/<%= student.student_id %>"
                   class="btn btn-link"
                   >Delete</a
                 >
