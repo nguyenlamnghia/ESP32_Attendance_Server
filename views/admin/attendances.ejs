@@ -26,9 +26,7 @@
             </a>
           </li>
           <li>
-            <a href="/admin/courses" class="nav-link link-dark">
-              Manage Course
-            </a>
+            <a href="/admin/courses" class="nav-link link-dark"> Manage Course </a>
           </li>
           <li>
             <a href="/admin/lecturers" class="nav-link link-dark">
@@ -76,31 +74,27 @@
 
       <!------------------------------------ main content ----------------------------------------------------->
       <div class="adminContent">
-        <div class="my-2">
-          <h3><%= course.title %></h3>
-          <hr>
-        </div>
         <div>
           <button
             type="button"
             class="btn btn-light"
-            onclick="window.location.href='/admin/add-student'"
+            onclick="window.location.href='/admin/add-course'"
           >
-            Add Student
+            Add Attendance
           </button>
           <button
             type="button"
             class="btn btn-light"
-            onclick="window.location.href='/admin/attendances/<%= class_info.class_id %>'"
+            onclick="window.location.href='/admin/createStudent'"
           >
-            Attendance
+            Add Lecturer
           </button>
           <button
             type="button"
             class="btn btn-light"
-            onclick="window.location.href='/admin/attendance'"
+            onclick="window.location.href='/admin/createStudent'"
           >
-            Add Student
+            Add Lecturer
           </button>
         </div>
 
@@ -110,35 +104,26 @@
           <thead>
             <tr>
               <th scope="col">STT</th>
-              <th scope="col">First Name</th>
-              <th scope="col">Last Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Phone</th>
-              <th scope="col">Date Of Birth</th>
+              <th scope="col">Time</th>
               <th scope="col"></th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody id="mytable">
-            <% let stt = 1; students.forEach(student=> { %>
+            <% let stt = 1; attendances.forEach(attendances=> { %>
             <tr>
               <td><%= stt++ %></td>
-              <td><%= student.first_name %></td>
-              <td><%= student.last_name %></td>
-              <td><%= student.email %></td>
-              <td><%= student.phone %></td>
-              <td><%= student.dob %></td>
-              <td><%= student.result %></td>
+              <td><%= attendances.time %></td>
               <td>
                 <a
-                  href="/admin/students/<%= student.student_id %>"
+                  href="/admin/classes/<%= class_info.class_id %>"
                   class="btn btn-link"
                   >Edit</a
                 >
               </td>
               <td>
                 <a
-                  href="/admin/students/delete/<%= student.student_id %>"
+                  href="/admin/courses/delete/<%= courses.course_id %>"
                   class="btn btn-link"
                   >Delete</a
                 >

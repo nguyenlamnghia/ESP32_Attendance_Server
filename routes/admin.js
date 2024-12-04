@@ -134,12 +134,9 @@ router.get(
 // ------------ END --------------
 
 
-// ------------- COURSE CONTROLLER -------------
+// ------------- CLASS CONTROLLER -------------
 // /admin/classes => GET
-// router.get("/classes", checkRole("admin"), adminController.getClasses);
-router.get("/classes", adminController.getClasses);
-// ------------ END --------------
-module.exports = router;
+router.get("/classes", checkRole("admin"), adminController.getClasses);
 
 // /admin/classes/:class_id => GET
 router.get(
@@ -147,3 +144,17 @@ router.get(
   checkRole("admin"),
   adminController.getClass
 );
+// ------------ END --------------
+
+// ------------- ATTENDANCE CONTROLLER -------------
+// /admin/classes => GET
+// router.get("/attendance", checkRole("admin"), adminController.getAttendance);
+router.get(
+  "/attendances/:class_id",
+  checkRole("admin"),
+  adminController.getAttendances
+);
+
+
+
+module.exports = router;
