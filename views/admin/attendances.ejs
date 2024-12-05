@@ -78,7 +78,7 @@
           <button
             type="button"
             class="btn btn-light"
-            onclick="window.location.href='/admin/add-course'"
+            onclick="window.location.href='/admin/add-attendance/<%= class_info.class_id %>'"
           >
             Add Attendance
           </button>
@@ -116,7 +116,7 @@
               <td><%= attendances.time %></td>
               <td>
                 <a
-                  href="/admin/classes/<%= class_info.class_id %>"
+                  href="/admin/attendances/<%= class_info.class_id %>/<%= attendances.attendance_id %>"
                   class="btn btn-link"
                   >Edit</a
                 >

@@ -155,6 +155,18 @@ router.get(
   adminController.getAttendances
 );
 
+// /admin/classes/:class_id/:attendance_id => GET
+router.get(
+  "/attendances/:class_id/:attendance_id",
+  checkRole("admin"),
+  adminController.getAttendance
+);
 
+// /admin/classes/:class_id/add-attendance => GET
+router.get(
+  "/add-attendance/:class_id",
+  checkRole("admin"),
+  adminController.getAddAttendance
+);
 
 module.exports = router;

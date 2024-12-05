@@ -63,6 +63,23 @@ module.exports = class Attendance {
     }
   }
 
+  // get attendance by attendance_id function
+  static async getAttendanceById(attendance_id) {
+    try {
+      const [rows, fields] = await db.execute(
+        "SELECT * FROM english_center.attendance WHERE attendance_id = ?",
+        [attendance_id]
+      );
+      return new Attendance(
+        rows[0].attendance_id,
+        rows[0].class_id,
+        rows[0].time
+      );
+    } catch (err) {
+      throw err;
+    }
+  }
+
   //update course function
   static async updateCourse(course) {
     try {

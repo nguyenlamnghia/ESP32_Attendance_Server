@@ -5,6 +5,7 @@ const Course = require("../models/course");
 const Class = require("../models/class");
 const Enrollment = require("../models/enrollment");
 const Attendance = require("../models/attendance");
+const Attendance_Process = require("../models/attendance_process");
 
 // import format date
 const { format, parseISO } = require("date-fns");
@@ -459,7 +460,7 @@ exports.getClass = async (req, res, next) => {
       course: course,
       class_info: class_info,
       
-      pageTitle: "Student Detail",
+      pageTitle: "Class Detail",
       path: "/admin/classes/" + class_id,
   });
   } catch (err) {
@@ -482,7 +483,7 @@ exports.getAttendances = async (req, res, next) => {
     const attendances = await Attendance.getAttendanceByClassId(class_id);
     // format time
     for (const attendance of attendances) {
-      attendance.time = format(attendance.time, "yyyy-MM-dd");
+      attendance.time = format(attendance.time, "dd-MM-yyyy");
     }
 
     const students = [];
@@ -505,6 +506,93 @@ exports.getAttendances = async (req, res, next) => {
       
       pageTitle: "Student Detail",
       path: "/admin/attendance/" + class_id,
+  });
+  } catch (err) {
+    console.log(err);
+    res.redirect("/admin");
+  }
+};
+
+
+
+exports.getAttendance = async (req, res, next) => {
+  try {
+    const class_id = req.params.class_id;
+    const attendance_id = req.params.attendance_id;
+    // let student = await Student.getStudentById(student_id);
+    // // format date of birth
+    // student.dob = format(student.dob, "yyyy-MM-dd");
+
+    // const student_account = await Account.getAccountById(student_id);
+    const enrollments = await Enrollment.getEnrollmentByClassId(class_id);
+    const class_info = await Class.getClassById(class_id);
+    const course = await Course.getCourseById(class_info.course_id);
+    const attendance_processes = await Attendance_Process.getEnrollment_ProcessByAttendanceId(attendance_id);
+
+
+    const attendance = await Attendance.getAttendanceById(attendance_id);
+    // format time
+    attendance.time = format(attendance.time, "yyyy-MM-dd");
+    
+    const students = [];
+    for (const enrollment of enrollments) {
+      const student = await Student.getStudentById(enrollment.student_id);
+      students.push(student);
+    }
+    // format date of birth
+    for (const student of students) {
+      student.dob = format(student.dob, "yyyy-MM-dd");
+    }
+    res.render("admin/attendance-detail", {
+      isLogged: req.session.user ? true : false,
+      account: req.session.user,
+
+      students: students,
+      course: course,
+      class_info: class_info,
+      attendance: attendance,
+      
+      pageTitle: "Attendance Detail",
+      path: "/admin/attendances/" + class_id + attendance_id,
+  });
+  } catch (err) {
+    console.log(err);
+    res.redirect("/admin");
+  }
+};
+
+
+exports.getAddAttendance = async (req, res, next) => {
+  try {
+    const class_id = req.params.class_id;
+    // let student = await Student.getStudentById(student_id);
+    // // format date of birth
+    // student.dob = format(student.dob, "yyyy-MM-dd");
+
+    // const student_account = await Account.getAccountById(student_id);
+    const enrollments = await Enrollment.getEnrollmentByClassId(class_id);
+    const class_info = await Class.getClassById(class_id);
+    const course = await Course.getCourseById(class_info.course_id);
+    
+    const students = [];
+    for (const enrollment of enrollments) {
+      const student = await Student.getStudentById(enrollment.student_id);
+      students.push(student);
+    }
+    // format date of birth
+    for (const student of students) {
+      student.dob = format(student.dob, "yyyy-MM-dd");
+    }
+    res.render("admin/add-attendance", {
+      isLogged: req.session.user ? true : false,
+      account: req.session.user,
+
+      students: students,
+      course: course,
+      class_info: class_info,
+      
+      pageTitle: "Add Attendance",
+      path: "/admin/attendances/" + class_id + "/add-attendance",
   });
   } catch (err) {
     console.log(err);
