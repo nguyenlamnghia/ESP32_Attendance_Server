@@ -30,21 +30,14 @@ module.exports = class Attendance {
     }
   }
 
-  // add course function
-  static async addCourse(course) {
+  // update attendance function
+  static async updateAttendance(attendance) {
     try {
-      const [rows, fields] = await db.execute(
-        "INSERT INTO english_center.course (course_id, title, infomation, ref, fee, thumbnail) VALUES (?, ?, ?, ?, ?, ?)",
-        [
-          course.course_id,
-          course.title,
-          course.infomation,
-          course.ref,
-          course.fee,
-          course.thumbnail,
-        ]
+      const result = await db.execute(
+        "UPDATE english_center.attendance SET class_id = ?, time = ? WHERE attendance_id = ?",
+        [attendance.class_id, attendance.time, attendance.attendance_id]
       );
-      return rows;
+      return result;
     } catch (err) {
       throw err;
     }
@@ -80,32 +73,12 @@ module.exports = class Attendance {
     }
   }
 
-  //update course function
-  static async updateCourse(course) {
+  // add attendance function
+  static async addAttendance(attendance) {
     try {
       const [rows, fields] = await db.execute(
-        "UPDATE english_center.course SET title = ?, infomation = ?, ref = ?, fee = ?, thumbnail = ? WHERE course_id = ?",
-        [
-          course.title,
-          course.infomation,
-          course.ref,
-          course.fee,
-          course.thumbnail,
-          course.course_id,
-        ]
-      );
-      return rows;
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  //delete course function
-  static async deleteCourse(course_id) {
-    try {
-      const [rows, fields] = await db.execute(
-        "DELETE FROM english_center.course WHERE course_id = ?",
-        [course_id]
+        "INSERT INTO english_center.attendance (attendance_id, class_id, time) VALUES (?, ?, ?)",
+        [attendance.attendance_id, attendance.class_id, attendance.time]
       );
       return rows;
     } catch (err) {

@@ -9,6 +9,7 @@ const Attendance_Process = require("../models/attendance_process");
 
 // import format date
 const { format, parseISO } = require("date-fns");
+const { el } = require("date-fns/locale");
 
 //---------------- ADMIN CONTROLLER ---------------
 exports.getIndex = async (req, res, next) => {
@@ -483,7 +484,7 @@ exports.getAttendances = async (req, res, next) => {
     const attendances = await Attendance.getAttendanceByClassId(class_id);
     // format time
     for (const attendance of attendances) {
-      attendance.time = format(attendance.time, "dd-MM-yyyy");
+      attendance.time = format(attendance.time, "yyyy-MM-dd");
     }
 
     const students = [];
@@ -551,9 +552,11 @@ exports.getAttendance = async (req, res, next) => {
       course: course,
       class_info: class_info,
       attendance: attendance,
+      enrollments: enrollments,
+      attendance_processes: attendance_processes,
       
       pageTitle: "Attendance Detail",
-      path: "/admin/attendances/" + class_id + attendance_id,
+      path: "/admin/attendances/" + class_id + "/" + attendance_id,
   });
   } catch (err) {
     console.log(err);
@@ -561,6 +564,35 @@ exports.getAttendance = async (req, res, next) => {
   }
 };
 
+exports.postAttendance = async (req, res, next) => {
+  const class_id = req.params.class_id;
+  const attendance_id = req.params.attendance_id;
+  const enrollments = await Enrollment.getEnrollmentByClassId(class_id);
+
+  // get attendance
+  const attendanceData = [];
+  for (let i = 0; i < enrollments.length; i++) {
+
+    const status = req.body['attendance_' + i];
+    if (status === undefined) {
+      attendanceData.push(new Attendance_Process(enrollments[i].enrollment_id, attendance_id, 0));
+    }
+    else {
+      attendanceData.push(new Attendance_Process(enrollments[i].enrollment_id, attendance_id, 1));
+    }
+  }
+
+  // update attendance
+  for (const attendance of attendanceData) {
+    await Attendance_Process.updateAttendanceProcess(attendance);
+  }
+
+  // update time
+  const time = req.body.time;
+  const attendance = new Attendance(attendance_id, class_id, time);
+  Attendance.updateAttendance(attendance);
+  res.redirect("/admin/attendances/" + class_id);
+}
 
 exports.getAddAttendance = async (req, res, next) => {
   try {
@@ -592,10 +624,38 @@ exports.getAddAttendance = async (req, res, next) => {
       class_info: class_info,
       
       pageTitle: "Add Attendance",
-      path: "/admin/attendances/" + class_id + "/add-attendance",
+      path: "/admin/add-attendance/" + class_id,
   });
   } catch (err) {
     console.log(err);
     res.redirect("/admin");
   }
-};
+  };
+
+exports.postAddAttendance = async (req, res, next) => {
+  // add attendance
+  const class_id = req.params.class_id;
+  const time = req.body.time;
+  const attendance = new Attendance(null, class_id, time);
+  const addAttendanceStatus = await Attendance.addAttendance(attendance);
+
+  // add attendance process
+  const attendance_id = addAttendanceStatus.insertId;
+  const enrollments = await Enrollment.getEnrollmentByClassId(class_id);
+  const attendanceData = [];
+  for (let i = 0; i < enrollments.length; i++) {
+    const status = req.body['attendance_' + i];
+    if (status === undefined) {
+      attendanceData.push(new Attendance_Process(enrollments[i].enrollment_id, attendance_id, 0));
+    }
+    else {
+      attendanceData.push(new Attendance_Process(enrollments[i].enrollment_id, attendance_id, 1));
+    }
+  }
+
+  // update attendance
+  for (const attendance of attendanceData) {
+    await Attendance_Process.addAttendanceProcess(attendance);
+  }
+  res.redirect("/admin/attendances/" + class_id);
+}

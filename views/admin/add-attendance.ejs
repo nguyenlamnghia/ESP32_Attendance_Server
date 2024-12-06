@@ -14,7 +14,7 @@
                             <hr>
                         </div>
                         <!-- Form START -->
-                        <form method="POST" action="<%= path %>" enctype="multipart/form-data" class="file-upload">
+                        <form method="POST" action="<%= path %>">
                             <div class="row gx-5 mb-5">
                                 <!-- Profile detail -->
                                 <div class="row g-3 mb-5">
@@ -63,23 +63,19 @@
                                             <th scope="col">Phone</th>
                                             <th scope="col">Date Of Birth</th>
                                             <th scope="col">Present</th>
-                                            <th scope="col">Absent</th>
                                           </tr>
                                         </thead>
                                         <tbody id="mytable">
-                                          <% let stt = 1; students.forEach(student=> { %>
+                                          <% students.forEach((student, index) => { %>
                                           <tr>
-                                            <td><%= stt++ %></td>
+                                            <td><%= index+1 %></td>
                                             <td><%= student.first_name %></td>
                                             <td><%= student.last_name %></td>
                                             <td><%= student.email %></td>
                                             <td><%= student.phone %></td>
                                             <td><%= student.dob %></td>
                                             <td>
-                                                <input class="form-check-input" type="radio" name="attendance_<%= stt %>"" id="present_<%= stt %>">
-                                            </td>
-                                            <td>
-                                                <input class="form-check-input" type="radio" name="attendance_<%= stt %>" id="absent_<%= stt %>" checked>
+                                                <input class="form-check-input" type="checkbox" name="attendance_<%= index %>"" id="present_<%= index %>"
                                             </td>
                                           </tr>
                                           <% }); %>
@@ -94,8 +90,7 @@
                 </div> <!-- Row END -->
                 <!-- Button -->
                 <div class="gap-3 d-md-flex justify-content-md-end text-center mb-5">
-                    <a href="delete/<%= class_info.class_id %>"><button type="button" class="btn btn-danger-soft btn-lg">Delete</button></a>
-                    <button type="submit" class="btn btn-success-soft btn-lg">Update</button>
+                    <button type="submit" class="btn btn-success-soft btn-lg">Save</button>
                 </div>
 
                 </form> <!-- Form END -->
@@ -107,8 +102,8 @@
 
                 <script>
                     document.addEventListener("DOMContentLoaded", function() {
-                        // Lắng nghe sự thay đổi trạng thái của các radio button
-                        const attendanceRadios = document.querySelectorAll('input[type="radio"][name^="attendance_"]');
+                        // Lắng nghe sự thay đổi trạng thái của các checkbox
+                        const attendanceCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="attendance_"]');
                         
                         // Các ô input để điền số lượng Present và Absent
                         const presentInput = document.querySelector('input[name="present"]');
@@ -119,13 +114,12 @@
                             let presentCount = 0;
                             let absentCount = 0;
                             
-                            attendanceRadios.forEach(radio => {
-                                if (radio.checked) {
-                                    if (radio.id.includes('present')) {
-                                        presentCount++;
-                                    } else if (radio.id.includes('absent')) {
-                                        absentCount++;
-                                    }
+                            attendanceCheckboxes.forEach(checkbox => {
+                                // Nếu checkbox được chọn (present)
+                                if (checkbox.checked) {
+                                    presentCount++;
+                                } else {
+                                    absentCount++;
                                 }
                             });
                             
@@ -133,18 +127,16 @@
                             presentInput.value = presentCount;
                             absentInput.value = absentCount;
                         }
-
-                        // Lắng nghe sự thay đổi trạng thái của các radio button
-                        attendanceRadios.forEach(radio => {
-                            radio.addEventListener('change', updateAttendanceCount);
+                  
+                        // Lắng nghe sự thay đổi trạng thái của các checkbox
+                        attendanceCheckboxes.forEach(checkbox => {
+                            checkbox.addEventListener('change', updateAttendanceCount);
                         });
-
+                  
                         // Gọi hàm để tính toán số lượng ngay khi trang được tải
                         updateAttendanceCount();
                     });
-
-                    
-                </script>
+                  </script>
     </body>
 
 </html>

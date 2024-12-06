@@ -162,11 +162,25 @@ router.get(
   adminController.getAttendance
 );
 
-// /admin/classes/:class_id/add-attendance => GET
+// /admin/classes/:class_id/:attendance_id => POST
+router.post(
+  "/attendances/:class_id/:attendance_id",
+  checkRole("admin"),
+  adminController.postAttendance
+);
+
+// /admin/add-attendance/:class_id => GET
 router.get(
   "/add-attendance/:class_id",
   checkRole("admin"),
   adminController.getAddAttendance
+);
+
+// /admin/add-attendance/:class_id => POST
+router.post(
+  "/add-attendance/:class_id",
+  checkRole("admin"),
+  adminController.postAddAttendance
 );
 
 module.exports = router;
