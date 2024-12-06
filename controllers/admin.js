@@ -659,3 +659,16 @@ exports.postAddAttendance = async (req, res, next) => {
   }
   res.redirect("/admin/attendances/" + class_id);
 }
+
+exports.deleteAttendance = (req, res, next) => {
+  // delete attendance
+  const class_id = req.params.class_id;
+  const attendance_id = req.params.attendance_id;
+
+  Attendance.deleteAttendance(attendance_id);
+
+  // delete attendance process
+  Attendance_Process.deleteAttendanceProcessByAttendanceId(attendance_id);
+
+  res.redirect("/admin/attendances/" + class_id);
+};

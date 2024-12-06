@@ -54,4 +54,16 @@ module.exports = class Attendance_Process {
       throw err;
     }
   }
+
+  static async deleteAttendanceProcessByAttendanceId(attendance_id) {
+    try {
+      const result = await db.execute(
+        "DELETE FROM english_center.attendance_process WHERE attendance_id = ?",
+        [attendance_id]
+      );
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

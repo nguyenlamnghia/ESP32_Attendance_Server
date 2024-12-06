@@ -85,4 +85,17 @@ module.exports = class Attendance {
       throw err;
     }
   }
+
+  // delete attendance function
+  static async deleteAttendance(attendance_id) {
+    try {
+      const [rows, fields] = await db.execute(
+        "DELETE FROM english_center.attendance WHERE attendance_id = ?",
+        [attendance_id]
+      );
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  }
 };

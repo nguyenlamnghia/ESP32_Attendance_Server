@@ -144,7 +144,6 @@ router.get(
   checkRole("admin"),
   adminController.getClass
 );
-// ------------ END --------------
 
 // ------------- ATTENDANCE CONTROLLER -------------
 // /admin/classes => GET
@@ -182,5 +181,14 @@ router.post(
   checkRole("admin"),
   adminController.postAddAttendance
 );
+
+// /admin/attendances/delete/:attendance_id => GET
+router.get(
+  "/attendances/delete/:class_id/:attendance_id",
+  checkRole("admin"),
+  adminController.deleteAttendance
+);
+
+// ------------ END --------------
 
 module.exports = router;
